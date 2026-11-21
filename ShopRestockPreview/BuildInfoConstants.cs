@@ -5,7 +5,7 @@ internal static class BuildInfo
     internal const string ID          = "de.pyeight.shoprestockpreview";
     internal const string Name        = "Shop Restock Preview";
     internal const string Description = "Shows a preview of what the shop restocked inside the restock notification";
-    internal const string Author      = "Shark";
+    internal const string Author      = "Shark (py8)";
     internal static readonly string[] CoAuthors    = null!;
     internal static readonly string[] Contributors = null!;
     internal const string MelonVersion = "1.0.0";
