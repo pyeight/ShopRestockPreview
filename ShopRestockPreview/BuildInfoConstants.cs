@@ -11,8 +11,8 @@ internal static class BuildInfo
     internal const string MelonVersion = "1.0.0";
     internal const string Version      = "1.0.0";
     internal const string Discord      = "https://discord.com/invite/a7wfBw5feU";
-    internal const string SourceCode   = null!;
-    internal const string Nexus        = null!;
+    internal const string SourceCode   = "https://github.com/pyeight/ShopRestockPreview";
+    internal const string Nexus        = "https://www.nexusmods.com/slimerancher2/mods/208";
     internal const bool UsePrism       = false;
     internal const string MinimumStarlightVersion = Starlight.BuildInfo.CodeVersion;
     internal const string MinimumGameVersion = "1.3.0";
