@@ -17,7 +17,7 @@ A *Slime Rancher 2* mod that shows what a shop restocked right inside of the res
 5. Start the game.
 
 ## Settings
-Found under `[ShopRestockPreview]` in `UserData/MelonPreferences.cfg`:
+Found under `[ShopRestockPreview]` in `UserData/MelonPreferences.cfg` (or the Starlight mod settings menu):
 
 | Setting               | Default | What it does                                                                                            |
 |-----------------------|---------|---------------------------------------------------------------------------------------------------------|
