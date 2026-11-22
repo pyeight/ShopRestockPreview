@@ -3,6 +3,7 @@ using Il2CppMonomiPark.SlimeRancher.Player;
 using Il2CppMonomiPark.SlimeRancher.Shop;
 using Il2CppMonomiPark.SlimeRancher.Shop.Runtime;
 using Il2CppMonomiPark.SlimeRancher.UI.Popup;
+using Il2CppMonomiPark.SlimeRancher.Util;
 
 namespace ShopRestockPreview.Patches;
 
@@ -27,10 +28,10 @@ internal static class HandleShopRestockPatch
 [HarmonyPatch(typeof(PlayerReminders), nameof(PlayerReminders.HandleShopsRestocked))]
 internal static class HandleShopsRestockedPatch
 {
-    public static void Prefix(ShopRuntime runtime, bool hasNewStock, IShopDefinition shopDef)
+    public static bool Prefix(ShopRuntime runtime, bool hasNewStock, IShopDefinition shopDef)
     {
         if (!hasNewStock || runtime == null || shopDef == null)
-            return;
+            return true;
 
         try
         {
@@ -40,6 +41,48 @@ internal static class HandleShopsRestockedPatch
         {
             Main.Log.Error($"Couldn't read the restocked items: {ex}");
         }
+
+        try
+        {
+            return !RefreshQueuedPopup(shopDef);
+        }
+        catch (Exception ex)
+        {
+            Main.Log.Error($"Couldn't check for a queued restock popup: {ex}");
+            return true;
+        }
+    }
+
+    private static bool RefreshQueuedPopup(IShopDefinition shopDef)
+    {
+        var config = shopDef.ShopRestockMessage;
+
+        if (!config || !SceneContextUtility.TryGetPopupDirector(out var director) || !director)
+            return false;
+
+        foreach (var handler in director._popupHandlers)
+        {
+            var stack = handler.TryCast<PreviewPopupStack>();
+
+            if (!stack || !IsQueued(stack!, config)) continue;
+
+            stack!.UpdatePopups();
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsQueued(PreviewPopupStack stack, PreviewPopupStandaloneConfig config)
+    {
+        var queued = stack._popupData;
+
+        for (var i = 0; i < queued.Count; i++)
+        {
+            if (RestockStock.Matches(config, queued[i])) return true;
+        }
+
+        return false;
     }
 }
 

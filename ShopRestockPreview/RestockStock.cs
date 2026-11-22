@@ -133,7 +133,7 @@ internal static class RestockStock
         return copy;
     }
 
-    private static bool Matches(PreviewPopupStandaloneConfig config, PreviewPopupViewModel data)
+    internal static bool Matches(PreviewPopupStandaloneConfig config, PreviewPopupViewModel data)
     {
         var anySet = false;
 
