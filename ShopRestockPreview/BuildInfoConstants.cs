@@ -8,8 +8,8 @@ internal static class BuildInfo
     internal const string Author      = "Shark (py8)";
     internal static readonly string[] CoAuthors    = null!;
     internal static readonly string[] Contributors = null!;
-    internal const string MelonVersion = "1.0.0";
-    internal const string Version      = "1.0.0";
+    internal const string MelonVersion = "1.0.1";
+    internal const string Version      = "1.0.1";
     internal const string Discord      = "https://discord.com/invite/a7wfBw5feU";
     internal const string SourceCode   = "https://github.com/pyeight/ShopRestockPreview";
     internal const string Nexus        = "https://www.nexusmods.com/slimerancher2/mods/208";
