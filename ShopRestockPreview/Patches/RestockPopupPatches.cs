@@ -1,4 +1,6 @@
+using System.Reflection;
 using HarmonyLib;
+using Il2CppInterop.Runtime.InteropTypes;
 using Il2CppMonomiPark.SlimeRancher.Player;
 using Il2CppMonomiPark.SlimeRancher.Shop;
 using Il2CppMonomiPark.SlimeRancher.Shop.Runtime;
@@ -83,6 +85,47 @@ internal static class HandleShopsRestockedPatch
         }
 
         return false;
+    }
+}
+
+[HarmonyPatch]
+internal static class PreviewPopupStackEnqueuePatch
+{
+    public static IEnumerable<MethodBase> TargetMethods()
+    {
+        yield return AccessTools.Method(typeof(PreviewPopupStack), nameof(PreviewPopupStack.EnqueuePopup), new[] { typeof(IPopupViewModel) });
+        yield return AccessTools.Method(typeof(PreviewPopupStack), nameof(PreviewPopupStack.EnqueuePopup), new[] { typeof(PreviewPopupViewModel) });
+    }
+
+    public static void Prefix(PreviewPopupStack __instance, Il2CppObjectBase __0)
+    {
+        try
+        {
+            ReplaceShownRestocks(__instance, __0?.TryCast<PreviewPopupViewModel>());
+        }
+        catch (Exception ex)
+        {
+            Main.Log.Error($"Couldn't remove the old restock popup: {ex}");
+        }
+    }
+
+    private static void ReplaceShownRestocks(PreviewPopupStack stack, PreviewPopupViewModel? incoming)
+    {
+        if (!stack || incoming == null || RestockStock.Find(incoming) == null) return;
+
+        var queued = stack._popupData;
+        var old    = new List<PreviewPopupViewModel>();
+
+        for (var i = 0; i < queued.Count; i++)
+        {
+            var data = queued[i];
+
+            if (data.Pointer != incoming.Pointer && RestockStock.Find(data) != null)
+                old.Add(data);
+        }
+
+        foreach (var data in old)
+            stack.DequeuePopup(data.Cast<IPopupViewModel>());
     }
 }
 
